@@ -516,20 +516,31 @@ footer .logo{display:inline;font-size:1.4rem;margin-right:.5rem}
 (function(){
   var bar = document.getElementById('siteHeader');
   if (!bar) return;
-  var lastY = window.scrollY, ticking = false;
+  var lastY = window.scrollY, ticking = false, locked = false, releaseTimer = 0;
+  function armRelease(){
+    clearTimeout(releaseTimer);
+    releaseTimer = setTimeout(function(){ locked = false; lastY = window.scrollY; }, 200);
+  }
   function update(){
     ticking = false;
     var y = Math.max(window.scrollY, 0), d = y - lastY;
     bar.classList.toggle('is-compact', y > 40);
-    if (y <= 80 || bar.contains(document.activeElement)) bar.classList.remove('is-hidden');
+    if (locked || y <= 80 || bar.contains(document.activeElement)) bar.classList.remove('is-hidden');
     else if (d > 6) bar.classList.add('is-hidden');
     else if (d < -6) bar.classList.remove('is-hidden');
     if (Math.abs(d) > 6) lastY = y;
   }
   window.addEventListener('scroll', function(){
+    if (locked) armRelease();
     if (!ticking) { ticking = true; requestAnimationFrame(update); }
   }, {passive: true});
   bar.addEventListener('focusin', function(){ bar.classList.remove('is-hidden'); });
+  bar.addEventListener('click', function(e){
+    if (!e.target.closest('a')) return;
+    locked = true;
+    bar.classList.remove('is-hidden');
+    armRelease();
+  });
   update();
 })();
 </script>
