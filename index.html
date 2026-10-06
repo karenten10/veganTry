@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>素素看｜今天吃什麼素</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#EEF3E8; --surface:#FFFFFF; --ink:#1D2A1F; --muted:#4A5B4D; --line:#C6D2BE; --tint:#DCE7D3;
+  --leaf:#2C6A3C; --on-leaf:#FFFFFF; --pumpkin:#E8902F; --on-pumpkin:#1D2A1F; --press:#9C5A17;
+  --b-vegan:#CFE5C8; --b-egg:#F5DE84; --b-milk:#D7E6F4; --b-ovolacto:#F1DFC2; --b-allium:#E6D6EE; --b-ink:#1D2A1F;
+  --display:"LXGW WenKai TC","Kaiti TC","BiauKai","DFKai-SB","Noto Serif TC",serif;
+  --body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#132017; --surface:#1A2B1F; --ink:#E4ECDF; --muted:#A9B9A8; --line:#30443A; --tint:#203327;
+    --leaf:#86C495; --on-leaf:#132017; --pumpkin:#F0A250; --on-pumpkin:#132017; --press:#8A4E12;
+    --b-vegan:#2E4A30; --b-egg:#554816; --b-milk:#24394D; --b-ovolacto:#4A3B24; --b-allium:#3E2F47; --b-ink:#E4ECDF;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#132017; --surface:#1A2B1F; --ink:#E4ECDF; --muted:#A9B9A8; --line:#30443A; --tint:#203327;
+  --leaf:#86C495; --on-leaf:#132017; --pumpkin:#F0A250; --on-pumpkin:#132017; --press:#8A4E12;
+  --b-vegan:#2E4A30; --b-egg:#554816; --b-milk:#24394D; --b-ovolacto:#4A3B24; --b-allium:#3E2F47; --b-ink:#E4ECDF;
+  color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);font-size:1.0625rem;line-height:1.75;-webkit-text-size-adjust:100%}
+img{max-width:100%}
+.wrap{max-width:1080px;margin:0 auto;padding:0 1.25rem}
+:focus-visible{outline:3px solid var(--pumpkin);outline-offset:3px;border-radius:6px}
+
+/* header */
+.site{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.25rem 1.5rem;padding:1rem 0}
+.logo{font-family:var(--display);font-size:1.9rem;font-weight:700;color:var(--leaf);text-decoration:none;line-height:1.2}
+.site nav ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:0 1.1rem}
+.site nav a{display:inline-flex;align-items:center;min-height:44px;color:var(--ink);text-decoration:none;font-size:.95rem}
+.site nav a:hover{color:var(--leaf);text-decoration:underline;text-underline-offset:4px}
+
+/* hero */
+.hero{display:grid;gap:2rem;padding:1.5rem 0 3.5rem;border-bottom:1px solid var(--line)}
+@media (min-width:860px){.hero{grid-template-columns:1fr 1.1fr;align-items:start;padding-top:3rem;gap:3rem}}
+.hero h1{font-family:var(--display);font-weight:700;font-size:clamp(2.9rem,10vw,5.2rem);line-height:1.08;margin:0 0 .75rem;letter-spacing:.02em}
+.lede{margin:0 0 1.75rem;color:var(--muted);font-size:1.125rem;max-width:26em}
+.legend{font-weight:700;margin:0 0 .5rem}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem}
+.chip{font:inherit;font-size:1rem;min-height:44px;padding:.35rem 1.05rem;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.chip:hover{border-color:var(--leaf)}
+.chip[aria-pressed="true"]{background:var(--leaf);border-color:var(--leaf);color:var(--on-leaf);font-weight:500}
+.check{display:flex;align-items:center;gap:.6rem;min-height:44px;margin:.5rem 0 1.5rem;cursor:pointer}
+.check input{width:1.25rem;height:1.25rem;margin:0;accent-color:var(--leaf)}
+.pick{font-family:var(--display);font-size:1.45rem;font-weight:700;min-height:58px;padding:.5rem 2rem;border:0;border-radius:14px;background:var(--pumpkin);color:var(--on-pumpkin);cursor:pointer;box-shadow:0 4px 0 var(--press);transition:transform .08s,box-shadow .08s}
+.pick:active{transform:translateY(3px);box-shadow:0 1px 0 var(--press)}
+
+.result{background:var(--surface);border:1.5px solid var(--line);border-radius:20px;padding:1.5rem 1.5rem 1.25rem;min-height:15rem;transform-origin:top center}
+.result.empty{display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);border-style:dashed;background:transparent}
+.result.empty p{margin:0;max-width:18em}
+.result.dealt{animation:deal .5s cubic-bezier(.2,.8,.3,1)}
+@keyframes deal{from{opacity:0;transform:perspective(900px) rotateX(-55deg) translateY(-8px)}to{opacity:1;transform:none}}
+.card-title{font-family:var(--display);font-size:2.1rem;line-height:1.25;margin:.35rem 0 .2rem}
+.desc{margin:0 0 1.25rem;color:var(--muted)}
+
+.meta{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;color:var(--muted);font-size:.95rem}
+.badge{display:inline-block;padding:.05rem .6rem;border-radius:6px;font-size:.875rem;font-weight:500;color:var(--b-ink);background:var(--b-vegan);white-space:nowrap}
+.badge.egg{background:var(--b-egg)}
+.badge.milk{background:var(--b-milk)}
+.badge.ovolacto{background:var(--b-ovolacto)}
+.badge.allium{background:var(--b-allium)}
+
+.recipe-body{display:grid;gap:1.25rem}
+@media (min-width:700px){.recipe-body.two{grid-template-columns:1fr 1.5fr;gap:2.5rem}}
+.mini{font-size:1rem;margin:0 0 .35rem}
+.ing{margin:0;padding-left:1.15rem}
+.steps{margin:0;padding-left:1.4rem}
+.ing li,.steps li{margin-bottom:.3rem}
+.tip{margin:1.1rem 0 0;padding:.7rem 1rem;background:var(--tint);border-radius:10px;font-size:.95rem}
+
+/* sections */
+section{padding:3.5rem 0;border-bottom:1px solid var(--line)}
+h2{font-family:var(--display);font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 .5rem;line-height:1.2}
+.section-lede{margin:0 0 1.75rem;color:var(--muted);max-width:36em}
+
+/* menu list */
+.count{font-size:.95rem;color:var(--muted);margin:0 0 .5rem}
+.menu{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
+.menu > li{border-bottom:1px solid var(--line)}
+.menu summary{display:flex;align-items:baseline;gap:.75rem;padding:.9rem .25rem;cursor:pointer;list-style:none;min-height:44px}
+.menu summary::-webkit-details-marker{display:none}
+.menu summary:hover .dish-name{color:var(--leaf)}
+.dish-name{font-family:var(--display);font-size:1.4rem;font-weight:700;line-height:1.3}
+.leader{flex:1;min-width:1.5rem;border-bottom:2px dotted var(--line);transform:translateY(-.3em)}
+.dish-meta{display:flex;gap:.6rem;align-items:center;white-space:nowrap;font-size:.95rem;color:var(--muted)}
+.chev{width:18px;height:18px;flex:none;transition:transform .2s}
+.menu details[open] .chev{transform:rotate(180deg)}
+.panel{padding:0 .25rem 1.6rem}
+.panel .desc{margin-bottom:1rem}
+.menu .none{padding:1.25rem .25rem;color:var(--muted)}
+@media (max-width:520px){
+  .leader{display:none}
+  .menu summary{flex-wrap:wrap;justify-content:space-between;row-gap:.2rem}
+}
+
+/* labels table */
+.table-wrap{overflow-x:auto;border:1.5px solid var(--line);border-radius:14px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:520px}
+th,td{text-align:left;padding:.8rem 1rem;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{font-size:.95rem;color:var(--muted);font-weight:500}
+tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
+tbody th{font-family:var(--display);font-size:1.2rem;white-space:nowrap}
+.note{font-size:.95rem;color:var(--muted);margin:1rem 0 0}
+
+/* cheat sheet */
+.cheat{display:grid;gap:2.5rem}
+@media (min-width:780px){.cheat{grid-template-columns:1.35fr 1fr}}
+.sub{font-size:1.15rem;margin:0 0 .6rem}
+.hidden{margin:0}
+.hidden div{display:grid;grid-template-columns:6.5em 1fr;gap:1rem;padding:.65rem 0;border-bottom:1px dotted var(--line)}
+.hidden dt{font-weight:700}
+.hidden dd{margin:0;color:var(--muted)}
+.ask{list-style:none;margin:0;padding:0;display:grid;gap:.7rem}
+.ask li{background:var(--surface);border:1.5px solid var(--line);border-radius:18px 18px 18px 4px;padding:.75rem 1.05rem}
+
+/* nutrition */
+.nutri{display:grid;gap:1.75rem}
+@media (min-width:780px){.nutri{grid-template-columns:repeat(3,1fr);gap:2rem}}
+.nutri > div{border-top:3px solid var(--leaf);padding-top:.9rem}
+.nutri h3{font-family:var(--display);font-size:1.45rem;margin:0 0 .35rem}
+.nutri p{margin:0}
+
+footer{padding:2.5rem 0 3rem;color:var(--muted);font-size:.95rem}
+footer .logo{font-size:1.4rem;margin-right:.5rem}
+
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .result.dealt{animation:none}
+  .chev,.pick{transition:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="site">
+    <a class="logo" href="#top" id="top">素素看</a>
+    <nav aria-label="主選單">
+      <ul>
+        <li><a href="#pick">今天吃什麼</a></li>
+        <li><a href="#recipes">食譜</a></li>
+        <li><a href="#labels">素食標示</a></li>
+        <li><a href="#eatout">外食小抄</a></li>
+        <li><a href="#nutrition">營養提醒</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <div class="hero" id="pick">
+      <div>
+        <h1>今天吃什麼？</h1>
+        <p class="lede">選好你吃的素，按一下，今天的菜就決定了。</p>
+        <p class="legend" id="dietLabel">我吃的是</p>
+        <div class="chips" role="group" aria-labelledby="dietLabel">
+          <button type="button" class="chip" data-diet="all" aria-pressed="true">都可以</button>
+          <button type="button" class="chip" data-diet="vegan" aria-pressed="false">全素</button>
+          <button type="button" class="chip" data-diet="egg" aria-pressed="false">蛋素</button>
+          <button type="button" class="chip" data-diet="milk" aria-pressed="false">奶素</button>
+          <button type="button" class="chip" data-diet="ovolacto" aria-pressed="false">奶蛋素</button>
+        </div>
+        <label class="check"><input type="checkbox" id="allium" checked> 可以吃五辛（蔥、蒜、韭菜等）</label>
+        <button type="button" class="pick" id="pickBtn">幫我選一道</button>
+      </div>
+      <div class="result empty" id="result" aria-live="polite">
+        <p>還沒選。按「幫我選一道」，或往下看全部食譜。</p>
+      </div>
+    </div>
+
+    <section id="recipes" aria-labelledby="recipesTitle">
+      <h2 id="recipesTitle">食譜</h2>
+      <p class="section-lede">家常、好買，大多半小時內上桌。點開菜名看材料和做法，清單會跟著上面選的素別篩選。</p>
+      <p class="count" id="count"></p>
+      <ul class="menu" id="menu"></ul>
+    </section>
+
+    <section id="labels" aria-labelledby="labelsTitle">
+      <h2 id="labelsTitle">看懂素食標示</h2>
+      <p class="section-lede">在台灣，包裝食品如果宣稱是素食，要標明屬於哪一類。買東西前看一眼，就知道適不適合你。</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th scope="col">標示</th><th scope="col">可以有</th><th scope="col">不會有</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">全素／純素</th><td>植物性食材</td><td>奶、蛋、五辛</td></tr>
+            <tr><th scope="row">蛋素</th><td>植物性食材、蛋</td><td>奶、五辛</td></tr>
+            <tr><th scope="row">奶素</th><td>植物性食材、奶</td><td>蛋、五辛</td></tr>
+            <tr><th scope="row">奶蛋素</th><td>植物性食材、奶、蛋</td><td>五辛</td></tr>
+            <tr><th scope="row">植物五辛素</th><td>植物性食材、五辛</td><td>奶、蛋</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">五辛指蔥、蒜、韭、蕎（蕗蕎）和興渠。</p>
+    </section>
+
+    <section id="eatout" aria-labelledby="eatoutTitle">
+      <h2 id="eatoutTitle">外食小抄</h2>
+      <p class="section-lede">連假出門吃飯前看一眼，這些地方最容易藏著葷料。</p>
+      <div class="cheat">
+        <div>
+          <h3 class="sub">常見的隱藏葷料</h3>
+          <dl class="hidden">
+            <div><dt>柴魚</dt><dd>日式高湯、味噌湯、涼麵醬、章魚燒上那層</dd></div>
+            <div><dt>蝦米、蝦皮</dt><dd>油飯、炒米粉、蘿蔔糕、粽子</dd></div>
+            <div><dt>肉燥、豬油</dt><dd>燙青菜淋的醬、乾麵、油蔥酥</dd></div>
+            <div><dt>大骨高湯</dt><dd>湯麵、火鍋湯底、關東煮</dd></div>
+            <div><dt>魚露、蝦醬</dt><dd>泰式、越式料理的沾醬和炒菜</dd></div>
+            <div><dt>蠔油</dt><dd>炒青菜、醃料（素蠔油要另外問）</dd></div>
+            <div><dt>吉利丁</dt><dd>果凍、奶酪、慕斯、軟糖</dd></div>
+            <div><dt>蛋</dt><dd>炸物麵衣、部分麵條和餅皮</dd></div>
+          </dl>
+        </div>
+        <div>
+          <h3 class="sub">點餐時可以這樣問</h3>
+          <ul class="ask">
+            <li>「我吃全素，燙青菜可以只加醬油嗎？不要肉燥和油蔥。」</li>
+            <li>「請問湯底是用什麼熬的？」</li>
+            <li>「可以不要放蔥和蒜嗎？」</li>
+            <li>「這個醬裡面有蝦米或柴魚嗎？」</li>
+            <li>「炒菜有用蠔油嗎？可以換成醬油嗎？」</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="nutrition" aria-labelledby="nutriTitle">
+      <h2 id="nutriTitle">營養提醒</h2>
+      <p class="section-lede">吃素也能吃得均衡，留意這三件事就好。</p>
+      <div class="nutri">
+        <div>
+          <h3>蛋白質</h3>
+          <p>豆腐、豆干、豆漿、毛豆、鷹嘴豆和堅果都是好來源。每一餐放一樣，比較容易吃夠。</p>
+        </div>
+        <div>
+          <h3>鐵</h3>
+          <p>深綠色蔬菜、紅莧菜、黑芝麻都含鐵。搭配芭樂、柑橘這類富含維生素 C 的水果一起吃，有助吸收。</p>
+        </div>
+        <div>
+          <h3>維生素 B12</h3>
+          <p>幾乎只存在動物性食品裡。吃全素的人，可以從強化食品或補充劑取得。</p>
+        </div>
+      </div>
+      <p class="note">以上是一般原則。有特殊健康狀況，請找營養師或醫師討論。</p>
+    </section>
+  </main>
+
+  <footer>
+    <span class="logo">素素看</span>給想好好吃飯的人
+  </footer>
+</div>
+
+<script>
+(function(){
+  var BASE = {vegan:'全素', egg:'蛋素', milk:'奶素', ovolacto:'奶蛋素'};
+  var ALLOWED = {all:null, vegan:['vegan'], egg:['vegan','egg'], milk:['vegan','milk'], ovolacto:['vegan','egg','milk','ovolacto']};
+
+  var RECIPES = [
+    {id:'sanbei', name:'三杯杏鮑菇', base:'vegan', allium:false, time:20,
+     desc:'麻油煸薑、九層塔收尾，不放蒜也夠香。',
+     ing:['杏鮑菇 3 根','老薑 1 小段','九層塔 1 把','黑麻油 2 大匙','醬油 1.5 大匙','冰糖 1 小匙','米酒 1 大匙（可省略）','辣椒 少許（可省略）'],
+     steps:['杏鮑菇切滾刀塊，薑切薄片。','黑麻油和薑片下鍋，小火煸到薑片邊緣捲起。','放入杏鮑菇，轉中火煎到表面上色。','加醬油、冰糖、米酒和辣椒，翻炒到醬汁收乾。','關火前放九層塔，拌勻就起鍋。'],
+     tip:'不加米酒的話，改加一點水也可以。'},
+    {id:'tomatoegg', name:'番茄炒蛋', base:'egg', allium:false, time:10,
+     desc:'蛋先炒到半熟起鍋，最後再回鍋，口感才嫩。',
+     ing:['雞蛋 3 顆','牛番茄 2 顆','番茄醬 1 大匙','糖 1 小匙','鹽 少許','油 2 大匙'],
+     steps:['蛋打散，加一小撮鹽。','熱油下蛋液，炒到半熟就先盛起。','番茄切塊下鍋，炒到變軟出汁。','加番茄醬、糖和少許水，煮成濃稠的醬。','蛋倒回鍋中，輕輕拌勻即可。'],
+     tip:'想保持蛋素，起鍋前就別撒蔥花。'},
+    {id:'tofu', name:'香煎板豆腐', base:'vegan', allium:false, time:15,
+     desc:'外皮金黃、裡面軟嫩，配一碗白飯剛好。',
+     ing:['板豆腐 1 盒','醬油膏 2 大匙','香油 少許','白芝麻 少許','香菜 少許','油 1 大匙'],
+     steps:['豆腐切成約 1.5 公分厚片，用廚房紙巾吸乾水分。','平底鍋熱油，中火把豆腐兩面煎到金黃。','盛盤後淋上醬油膏和香油。','撒上白芝麻和香菜。'],
+     tip:'表面水分擦乾，比較不會噴油，也更容易上色。'},
+    {id:'pumpkin', name:'南瓜牛奶濃湯', base:'milk', allium:false, time:30,
+     desc:'不放洋蔥，靠南瓜和馬鈴薯本身的甜味。',
+     ing:['南瓜 半顆（約 500 公克）','馬鈴薯 1 顆','牛奶 300 毫升','水 300 毫升','奶油 10 公克','鹽 適量','黑胡椒 少許'],
+     steps:['南瓜去籽切塊，馬鈴薯去皮切塊。','奶油小火融化，下南瓜和馬鈴薯拌炒 2 分鐘。','加水煮約 15 分鐘，煮到可以輕鬆壓碎。','用調理棒打成泥。','倒入牛奶小火加熱，加鹽和黑胡椒調味。'],
+     tip:'加牛奶後保持小火、不要煮滾，口感比較滑順。'},
+    {id:'mapo', name:'素麻婆豆腐', base:'vegan', allium:true, time:20,
+     desc:'香菇末代替絞肉，豆瓣醬炒出紅油是關鍵。',
+     ing:['嫩豆腐 1 盒','乾香菇 4 朵','蒜末 2 瓣','青蔥 1 根','辣豆瓣醬 1.5 大匙','醬油 1 小匙','花椒粉 少許','太白粉水 適量'],
+     steps:['乾香菇泡軟切末，泡香菇的水留著。','豆腐切丁，用熱水燙一下撈起。','熱油炒香菇末，炒到有香味。','下蒜末和豆瓣醬，小火炒出紅油。','加半碗香菇水和醬油，放豆腐小火煮 3 分鐘。','用太白粉水勾芡，撒蔥花和花椒粉。'],
+     tip:'不吃五辛的話，省略蒜和蔥，改用薑末爆香，就是全素版。'},
+    {id:'danbing', name:'起司蔬菜蛋餅', base:'ovolacto', allium:false, time:10,
+     desc:'高麗菜絲加玉米，早餐店風味自己做。',
+     ing:['蛋餅皮 1 張','雞蛋 1 顆','起司片 1 片','高麗菜絲 1 把','玉米粒 2 大匙','醬油膏 適量'],
+     steps:['蛋打散，拌入高麗菜絲和玉米粒。','平底鍋抹少許油，倒入蛋液攤平。','蛋液半熟時蓋上蛋餅皮，壓一下讓它黏住。','翻面煎約 1 分鐘，放上起司片。','捲起切段，沾醬油膏吃。'],
+     tip:'有些市售蛋餅皮用豬油製作，買之前看一下成分表。'},
+    {id:'friedrice', name:'毛豆玉米炒飯', base:'vegan', allium:false, time:15,
+     desc:'隔夜飯最好炒，顏色漂亮，也有蛋白質。',
+     ing:['隔夜白飯 1 碗','毛豆仁 1/3 碗','玉米粒 1/3 碗','紅蘿蔔丁 1/4 碗','醬油 1 小匙','鹽 少許','白胡椒 少許','油 1.5 大匙'],
+     steps:['毛豆和紅蘿蔔丁先燙熟瀝乾。','熱油下白飯，用鍋鏟壓散炒鬆。','加入毛豆、玉米、紅蘿蔔一起拌炒。','醬油從鍋邊淋下去，炒出香氣。','加鹽和白胡椒調味。'],
+     tip:'想加蛋也可以，就變成蛋素版。'},
+    {id:'miso', name:'昆布味噌湯', base:'vegan', allium:false, time:25,
+     desc:'用昆布熬湯底，取代常見的柴魚。',
+     ing:['昆布 1 段（約 10 公分）','水 600 毫升','嫩豆腐 半盒','金針菇 半包','乾海帶芽 1 小撮','味噌 2 大匙'],
+     steps:['昆布泡水 20 分鐘，連水一起小火加熱，快滾時取出昆布。','放入金針菇和豆腐丁，煮約 3 分鐘。','轉最小火，用湯勺把味噌化開拌入，之後不要再煮滾。','最後放海帶芽，泡開就完成。'],
+     tip:'有些調味味噌加了柴魚，挑成分只有黃豆、米、鹽的比較安心。'}
+  ];
+
+  var diet = 'all', alliumOk = true, current = null;
+
+  try {
+    var saved = JSON.parse(localStorage.getItem('suday-pref') || 'null');
+    if (saved) {
+      if (saved.diet && Object.prototype.hasOwnProperty.call(ALLOWED, saved.diet)) diet = saved.diet;
+      if (typeof saved.allium === 'boolean') alliumOk = saved.allium;
+    }
+  } catch (e) {}
+
+  function save(){
+    try { localStorage.setItem('suday-pref', JSON.stringify({diet: diet, allium: alliumOk})); } catch (e) {}
+  }
+
+  function el(tag, cls, text){
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function label(r){ return (r.allium && r.base === 'vegan') ? '植物五辛素' : BASE[r.base]; }
+  function badgeClass(r){ return r.allium ? 'allium' : r.base; }
+  function canEat(r){
+    var a = ALLOWED[diet];
+    if (a && a.indexOf(r.base) === -1) return false;
+    if (r.allium && !alliumOk) return false;
+    return true;
+  }
+  function meta(r){
+    var d = el('div', 'meta');
+    d.appendChild(el('span', 'badge ' + badgeClass(r), label(r)));
+    d.appendChild(el('span', null, r.time + ' 分鐘'));
+    return d;
+  }
+  function body(r, two){
+    var w = el('div', 'recipe-body' + (two ? ' two' : ''));
+    var a = el('div'); a.appendChild(el('h3', 'mini', '材料'));
+    var ul = el('ul', 'ing'); r.ing.forEach(function(x){ ul.appendChild(el('li', null, x)); });
+    a.appendChild(ul);
+    var b = el('div'); b.appendChild(el('h3', 'mini', '做法'));
+    var ol = el('ol', 'steps'); r.steps.forEach(function(x){ ol.appendChild(el('li', null, x)); });
+    b.appendChild(ol);
+    w.appendChild(a); w.appendChild(b);
+    return w;
+  }
+  function chevron(){
+    var ns = 'http://www.w3.org/2000/svg';
+    var s = document.createElementNS(ns, 'svg');
+    s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('class', 'chev'); s.setAttribute('aria-hidden', 'true');
+    var p = document.createElementNS(ns, 'path');
+    p.setAttribute('d', 'M6 9l6 6 6-6'); p.setAttribute('fill', 'none'); p.setAttribute('stroke', 'currentColor');
+    p.setAttribute('stroke-width', '2'); p.setAttribute('stroke-linecap', 'round'); p.setAttribute('stroke-linejoin', 'round');
+    s.appendChild(p);
+    return s;
+  }
+
+  var resultEl = document.getElementById('result');
+  var menuEl = document.getElementById('menu');
+  var countEl = document.getElementById('count');
+  var alliumEl = document.getElementById('allium');
+  var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
+
+  function showEmpty(msg){
+    resultEl.className = 'result empty';
+    resultEl.replaceChildren(el('p', null, msg));
+    current = null;
+  }
+  function showRecipe(r){
+    resultEl.className = 'result';
+    var title = el('h2', 'card-title', r.name);
+    resultEl.replaceChildren(meta(r), title, el('p', 'desc', r.desc), body(r, false), el('p', 'tip', '小提醒：' + r.tip));
+    void resultEl.offsetWidth;
+    resultEl.classList.add('dealt');
+    current = r;
+  }
+
+  function renderList(){
+    var list = RECIPES.filter(canEat);
+    countEl.textContent = '符合的有 ' + list.length + ' 道';
+    menuEl.replaceChildren();
+    if (!list.length) {
+      menuEl.appendChild(el('li', 'none', '沒有符合的食譜。試試勾選「可以吃五辛」，或換一個選項。'));
+      return;
+    }
+    list.forEach(function(r){
+      var li = el('li');
+      var d = el('details');
+      var s = el('summary');
+      s.appendChild(el('span', 'dish-name', r.name));
+      s.appendChild(el('span', 'leader'));
+      var m = el('span', 'dish-meta');
+      m.appendChild(el('span', 'badge ' + badgeClass(r), label(r)));
+      m.appendChild(el('span', null, r.time + ' 分鐘'));
+      m.appendChild(chevron());
+      s.appendChild(m);
+      var panel = el('div', 'panel');
+      panel.appendChild(el('p', 'desc', r.desc));
+      panel.appendChild(body(r, true));
+      panel.appendChild(el('p', 'tip', '小提醒：' + r.tip));
+      d.appendChild(s); d.appendChild(panel);
+      li.appendChild(d);
+      menuEl.appendChild(li);
+    });
+  }
+
+  function syncControls(){
+    chips.forEach(function(c){ c.setAttribute('aria-pressed', c.dataset.diet === diet ? 'true' : 'false'); });
+    alliumEl.checked = alliumOk;
+  }
+
+  function onFilterChange(){
+    save();
+    syncControls();
+    renderList();
+    if (current && !canEat(current)) showEmpty('選項變了，再按一次「幫我選一道」重新挑。');
+  }
+
+  chips.forEach(function(c){
+    c.addEventListener('click', function(){ diet = c.dataset.diet; onFilterChange(); });
+  });
+  alliumEl.addEventListener('change', function(){ alliumOk = alliumEl.checked; onFilterChange(); });
+
+  document.getElementById('pickBtn').addEventListener('click', function(){
+    var pool = RECIPES.filter(canEat);
+    if (!pool.length) { showEmpty('沒有符合的菜。試試勾選「可以吃五辛」。'); return; }
+    if (pool.length > 1 && current) pool = pool.filter(function(r){ return r.id !== current.id; });
+    showRecipe(pool[Math.floor(Math.random() * pool.length)]);
+  });
+
+  syncControls();
+  renderList();
+})();
+</script>
+</body>
+</html>
