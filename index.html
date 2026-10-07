@@ -130,6 +130,7 @@ section h2::before{content:"";display:block;width:2.2rem;height:.3rem;margin-bot
 .section-lede{margin:0 0 1.75rem;color:var(--muted);max-width:36em}
 
 /* menu list */
+.cat-chips{margin-bottom:1.25rem}
 .count{font-size:.95rem;color:var(--muted);margin:0 0 .5rem}
 .menu{list-style:none;margin:0;padding:0;display:grid;gap:.65rem}
 .menu > li{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;box-shadow:var(--shadow);transition:border-color .15s}
@@ -236,7 +237,9 @@ footer .logo{display:inline;font-size:1.4rem;margin-right:.5rem}
 
     <section id="recipes" aria-labelledby="recipesTitle">
       <h2 id="recipesTitle">食譜</h2>
-      <p class="section-lede">家常、好買，大多半小時內上桌。點開菜名看材料和做法，清單會跟著上面選的素別篩選。</p>
+      <p class="section-lede">家常、好買，大多半小時內上桌。點開菜名看材料和做法，清單會跟著上面選的素別篩選，也可以用分類縮小範圍。</p>
+      <p class="legend" id="catLabel">分類</p>
+      <div class="chips cat-chips" id="cats" role="group" aria-labelledby="catLabel"></div>
       <p class="count" id="count"></p>
       <ul class="menu" id="menu"></ul>
     </section>
@@ -323,61 +326,76 @@ footer .logo{display:inline;font-size:1.4rem;margin-right:.5rem}
   var ALLOWED = {all:null, vegan:['vegan'], egg:['vegan','egg'], milk:['vegan','milk'], ovolacto:['vegan','egg','milk','ovolacto']};
 
   var RECIPES = [
-    {id:'sanbei', name:'三杯杏鮑菇', base:'vegan', allium:false, time:20,
+    {id:'sanbei', name:'三杯杏鮑菇', cat:'home', base:'vegan', allium:false, time:20,
      desc:'麻油煸薑、九層塔收尾，不放蒜也夠香。',
      ing:['杏鮑菇 3 根','老薑 1 小段','九層塔 1 把','黑麻油 2 大匙','醬油 1.5 大匙','冰糖 1 小匙','米酒 1 大匙（可省略）','辣椒 少許（可省略）'],
      steps:['杏鮑菇切滾刀塊，薑切薄片。','黑麻油和薑片下鍋，小火煸到薑片邊緣捲起。','放入杏鮑菇，轉中火煎到表面上色。','加醬油、冰糖、米酒和辣椒，翻炒到醬汁收乾。','關火前放九層塔，拌勻就起鍋。'],
      tip:'不加米酒的話，改加一點水也可以。'},
-    {id:'tomatoegg', name:'番茄炒蛋', base:'egg', allium:false, time:10,
+    {id:'tomatoegg', name:'番茄炒蛋', cat:'home', base:'egg', allium:false, time:10,
      desc:'蛋先炒到半熟起鍋，最後再回鍋，口感才嫩。',
      ing:['雞蛋 3 顆','牛番茄 2 顆','番茄醬 1 大匙','糖 1 小匙','鹽 少許','油 2 大匙'],
      steps:['蛋打散，加一小撮鹽。','熱油下蛋液，炒到半熟就先盛起。','番茄切塊下鍋，炒到變軟出汁。','加番茄醬、糖和少許水，煮成濃稠的醬。','蛋倒回鍋中，輕輕拌勻即可。'],
      tip:'想保持蛋素，起鍋前就別撒蔥花。'},
-    {id:'tofu', name:'香煎板豆腐', base:'vegan', allium:false, time:15,
+    {id:'tofu', name:'香煎板豆腐', cat:'home', base:'vegan', allium:false, time:15,
      desc:'外皮金黃、裡面軟嫩，配一碗白飯剛好。',
      ing:['板豆腐 1 盒','醬油膏 2 大匙','香油 少許','白芝麻 少許','香菜 少許','油 1 大匙'],
      steps:['豆腐切成約 1.5 公分厚片，用廚房紙巾吸乾水分。','平底鍋熱油，中火把豆腐兩面煎到金黃。','盛盤後淋上醬油膏和香油。','撒上白芝麻和香菜。'],
      tip:'表面水分擦乾，比較不會噴油，也更容易上色。'},
-    {id:'pumpkin', name:'南瓜牛奶濃湯', base:'milk', allium:false, time:30,
+    {id:'pumpkin', name:'南瓜牛奶濃湯', cat:'soup', base:'milk', allium:false, time:30,
      desc:'不放洋蔥，靠南瓜和馬鈴薯本身的甜味。',
      ing:['南瓜 半顆（約 500 公克）','馬鈴薯 1 顆','牛奶 300 毫升','水 300 毫升','奶油 10 公克','鹽 適量','黑胡椒 少許'],
      steps:['南瓜去籽切塊，馬鈴薯去皮切塊。','奶油小火融化，下南瓜和馬鈴薯拌炒 2 分鐘。','加水煮約 15 分鐘，煮到可以輕鬆壓碎。','用調理棒打成泥。','倒入牛奶小火加熱，加鹽和黑胡椒調味。'],
      tip:'加牛奶後保持小火、不要煮滾，口感比較滑順。'},
-    {id:'mapo', name:'素麻婆豆腐', base:'vegan', allium:true, time:20,
+    {id:'mapo', name:'素麻婆豆腐', cat:'home', base:'vegan', allium:true, time:20,
      desc:'香菇末代替絞肉，豆瓣醬炒出紅油是關鍵。',
      ing:['嫩豆腐 1 盒','乾香菇 4 朵','蒜末 2 瓣','青蔥 1 根','辣豆瓣醬 1.5 大匙','醬油 1 小匙','花椒粉 少許','太白粉水 適量'],
      steps:['乾香菇泡軟切末，泡香菇的水留著。','豆腐切丁，用熱水燙一下撈起。','熱油炒香菇末，炒到有香味。','下蒜末和豆瓣醬，小火炒出紅油。','加半碗香菇水和醬油，放豆腐小火煮 3 分鐘。','用太白粉水勾芡，撒蔥花和花椒粉。'],
      tip:'不吃五辛的話，省略蒜和蔥，改用薑末爆香，就是全素版。'},
-    {id:'danbing', name:'起司蔬菜蛋餅', base:'ovolacto', allium:false, time:10,
+    {id:'danbing', name:'起司蔬菜蛋餅', cat:'breakfast', base:'ovolacto', allium:false, time:10,
      desc:'高麗菜絲加玉米，早餐店風味自己做。',
      ing:['蛋餅皮 1 張','雞蛋 1 顆','起司片 1 片','高麗菜絲 1 把','玉米粒 2 大匙','醬油膏 適量'],
      steps:['蛋打散，拌入高麗菜絲和玉米粒。','平底鍋抹少許油，倒入蛋液攤平。','蛋液半熟時蓋上蛋餅皮，壓一下讓它黏住。','翻面煎約 1 分鐘，放上起司片。','捲起切段，沾醬油膏吃。'],
      tip:'有些市售蛋餅皮用豬油製作，買之前看一下成分表。'},
-    {id:'friedrice', name:'毛豆玉米炒飯', base:'vegan', allium:false, time:15,
+    {id:'friedrice', name:'毛豆玉米炒飯', cat:'staple', base:'vegan', allium:false, time:15,
      desc:'隔夜飯最好炒，顏色漂亮，也有蛋白質。',
      ing:['隔夜白飯 1 碗','毛豆仁 1/3 碗','玉米粒 1/3 碗','紅蘿蔔丁 1/4 碗','醬油 1 小匙','鹽 少許','白胡椒 少許','油 1.5 大匙'],
      steps:['毛豆和紅蘿蔔丁先燙熟瀝乾。','熱油下白飯，用鍋鏟壓散炒鬆。','加入毛豆、玉米、紅蘿蔔一起拌炒。','醬油從鍋邊淋下去，炒出香氣。','加鹽和白胡椒調味。'],
      tip:'想加蛋也可以，就變成蛋素版。'},
-    {id:'miso', name:'昆布味噌湯', base:'vegan', allium:false, time:25,
+    {id:'miso', name:'昆布味噌湯', cat:'soup', base:'vegan', allium:false, time:25,
      desc:'用昆布熬湯底，取代常見的柴魚。',
      ing:['昆布 1 段（約 10 公分）','水 600 毫升','嫩豆腐 半盒','金針菇 半包','乾海帶芽 1 小撮','味噌 2 大匙'],
      steps:['昆布泡水 20 分鐘，連水一起小火加熱，快滾時取出昆布。','放入金針菇和豆腐丁，煮約 3 分鐘。','轉最小火，用湯勺把味噌化開拌入，之後不要再煮滾。','最後放海帶芽，泡開就完成。'],
-     tip:'有些調味味噌加了柴魚，挑成分只有黃豆、米、鹽的比較安心。'}
+     tip:'有些調味味噌加了柴魚，挑成分只有黃豆、米、鹽的比較安心。'},
+    {id:'avosalad', name:'酪梨沙拉', cat:'light', base:'vegan', allium:false, time:10,
+     desc:'酪梨配上番茄和玉米，淋檸檬橄欖油，不用開火就能吃。',
+     ing:['酪梨 1 顆','小番茄 8 顆','熟玉米粒 3 大匙','小黃瓜 半條','生菜 1 把','檸檬汁 1 大匙','橄欖油 1 大匙','鹽 少許','黑胡椒 少許'],
+     steps:['酪梨對切去籽，挖出果肉切塊，淋一點檸檬汁。','小番茄對切，小黃瓜切片，生菜撕成小片。','生菜鋪在盤底，放上酪梨、番茄、小黃瓜和玉米。','剩下的檸檬汁加橄欖油、鹽和黑胡椒拌勻，淋在沙拉上。'],
+     tip:'酪梨選按下去稍微有彈性的，太硬沒香氣，太軟容易有黑斑。'},
+    {id:'avosushi', name:'酪梨壽司', cat:'light', base:'vegan', allium:false, time:30,
+     desc:'酪梨的口感像生魚片，配小黃瓜和紅蘿蔔，捲起來清爽不膩。',
+     ing:['壽司米 1 杯','米醋 2 大匙','糖 1 大匙','鹽 半小匙','海苔 3 張','酪梨 1 顆','小黃瓜 1 條','紅蘿蔔 半條','白芝麻 少許','醬油和芥末 適量'],
+     steps:['壽司米洗好，水量比平常少一點，煮熟。','米醋、糖和鹽拌勻，趁熱拌入米飯，放涼。','酪梨、小黃瓜和紅蘿蔔切成長條，紅蘿蔔先燙軟。','竹簾上鋪海苔，米飯平鋪，上方留約 2 公分。','中間排上食材，捲緊，用刀切成小塊。','撒白芝麻，沾醬油和芥末吃。'],
+     tip:'刀子沾點水再切，米飯比較不會黏刀。市售壽司醋、調味海苔偶爾會加柴魚，買之前看一下成分表。'}
   ];
 
   var diet = 'all', alliumOk = true, current = null;
-  var EMOJI = {sanbei:'🥘', tomatoegg:'🍅', tofu:'🍢', pumpkin:'🎃', mapo:'🌶️', danbing:'🌯', friedrice:'🍚', miso:'🍲'};
+  var EMOJI = {sanbei:'🥘', tomatoegg:'🍅', tofu:'🍢', pumpkin:'🎃', mapo:'🌶️', danbing:'🌯', friedrice:'🍚', miso:'🍲', avosalad:'🥗', avosushi:'🥑'};
+  var CATS = [['all','全部'], ['home','家常菜'], ['staple','主食'], ['soup','湯品'], ['breakfast','早餐'], ['light','輕食沙拉']];
+  var CATNAME = {};
+  CATS.forEach(function(c){ CATNAME[c[0]] = c[1]; });
+  var cat = 'all';
 
   try {
     var saved = JSON.parse(localStorage.getItem('suday-pref') || 'null');
     if (saved) {
       if (saved.diet && Object.prototype.hasOwnProperty.call(ALLOWED, saved.diet)) diet = saved.diet;
       if (typeof saved.allium === 'boolean') alliumOk = saved.allium;
+      if (saved.cat && Object.prototype.hasOwnProperty.call(CATNAME, saved.cat)) cat = saved.cat;
     }
   } catch (e) {}
 
   function save(){
-    try { localStorage.setItem('suday-pref', JSON.stringify({diet: diet, allium: alliumOk})); } catch (e) {}
+    try { localStorage.setItem('suday-pref', JSON.stringify({diet: diet, allium: alliumOk, cat: cat})); } catch (e) {}
   }
 
   function el(tag, cls, text){
@@ -399,10 +417,11 @@ footer .logo{display:inline;font-size:1.4rem;margin-right:.5rem}
     if (r.allium && !alliumOk) return false;
     return true;
   }
+  function inCat(r){ return cat === 'all' || r.cat === cat; }
   function meta(r){
     var d = el('div', 'meta');
     d.appendChild(el('span', 'badge ' + badgeClass(r), label(r)));
-    d.appendChild(el('span', null, r.time + ' 分鐘'));
+    d.appendChild(el('span', null, CATNAME[r.cat] + '・' + r.time + ' 分鐘'));
     return d;
   }
   function body(r, two){
@@ -431,7 +450,23 @@ footer .logo{display:inline;font-size:1.4rem;margin-right:.5rem}
   var menuEl = document.getElementById('menu');
   var countEl = document.getElementById('count');
   var alliumEl = document.getElementById('allium');
-  var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
+  var chips = Array.prototype.slice.call(document.querySelectorAll('.chip[data-diet]'));
+  var catsEl = document.getElementById('cats');
+  var catChips = CATS.map(function(c){
+    var b = el('button', 'chip');
+    b.type = 'button';
+    b.addEventListener('click', function(){ cat = c[0]; onFilterChange(); });
+    catsEl.appendChild(b);
+    return b;
+  });
+  function syncCats(){
+    var pool = RECIPES.filter(canEat);
+    CATS.forEach(function(c, i){
+      var n = c[0] === 'all' ? pool.length : pool.filter(function(r){ return r.cat === c[0]; }).length;
+      catChips[i].textContent = c[1] + ' ' + n;
+      catChips[i].setAttribute('aria-pressed', c[0] === cat ? 'true' : 'false');
+    });
+  }
 
   function showEmpty(msg){
     resultEl.className = 'result empty';
@@ -456,11 +491,11 @@ footer .logo{display:inline;font-size:1.4rem;margin-right:.5rem}
   }
 
   function renderList(){
-    var list = RECIPES.filter(canEat);
+    var list = RECIPES.filter(canEat).filter(inCat);
     countEl.textContent = '符合的有 ' + list.length + ' 道';
     menuEl.replaceChildren();
     if (!list.length) {
-      menuEl.appendChild(el('li', 'none', '沒有符合的食譜。試試勾選「可以吃五辛」，或換一個選項。'));
+      menuEl.appendChild(el('li', 'none', '沒有符合的食譜。試試勾選「可以吃五辛」，或換一個素別、分類。'));
       return;
     }
     list.forEach(function(r){
@@ -488,6 +523,7 @@ footer .logo{display:inline;font-size:1.4rem;margin-right:.5rem}
   function syncControls(){
     chips.forEach(function(c){ c.setAttribute('aria-pressed', c.dataset.diet === diet ? 'true' : 'false'); });
     alliumEl.checked = alliumOk;
+    syncCats();
   }
 
   function onFilterChange(){
