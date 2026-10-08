@@ -122,6 +122,7 @@ img{max-width:100%}
 .steps{margin:0;padding-left:1.4rem}
 .ing li,.steps li{margin-bottom:.3rem}
 .tip{margin:1.1rem 0 0;padding:.7rem 1rem;background:var(--tint);border-radius:10px;font-size:.95rem}
+.tip + .tip{margin-top:.6rem}
 
 /* sections */
 section{padding:3.5rem 0;border-bottom:1px solid var(--line)}
@@ -376,11 +377,12 @@ footer .logo{display:inline;font-size:1.4rem;margin-right:.5rem}
      ing:['壽司米 1 杯','米醋 2 大匙','糖 1 大匙','鹽 半小匙','海苔 3 張','酪梨 1 顆','小黃瓜 1 條','紅蘿蔔 半條','白芝麻 少許','醬油和芥末 適量'],
      steps:['壽司米洗好，水量比平常少一點，煮熟。','米醋、糖和鹽拌勻，趁熱拌入米飯，放涼。','酪梨、小黃瓜和紅蘿蔔切成長條，紅蘿蔔先燙軟。','竹簾上鋪海苔，米飯平鋪，上方留約 2 公分。','中間排上食材，捲緊，用刀切成小塊。','撒白芝麻，沾醬油和芥末吃。'],
      tip:'刀子沾點水再切，米飯比較不會黏刀。市售壽司醋、調味海苔偶爾會加柴魚，買之前看一下成分表。'},
-    {id:'douhua', name:'手作豆花', cat:'dessert', base:'vegan', allium:false, time:30,
-     desc:'只要豆漿和石膏粉，淋上黑糖薑水，一碗暖暖的傳統豆花。',
-     ing:['無糖濃豆漿 500 毫升','食用石膏粉 1 小匙（約 3 公克）','冷水 2 大匙','黑糖 3 大匙','水 100 毫升','老薑 3 片（可省略）','花生或粉圓 適量（可省略）'],
-     steps:['豆漿倒入鍋中，小火煮到快滾（冒小泡、不要大滾）後離火。','石膏粉加冷水攪勻，倒進要盛豆花的大碗或容器裡。','豆漿從約 30 公分高的地方，一口氣快速沖進碗裡。沖進去後不要再攪拌。','蓋上蓋子或保鮮膜，靜置 15 到 20 分鐘，等它凝固。','黑糖、水和薑片小火煮到糖溶化，約 5 分鐘。','用湯匙把豆花薄薄刮起，盛碗，淋上糖水，放上喜歡的配料。'],
-     tip:'豆漿要用不加糖、濃度高的才容易凝固。市售豆漿加了糖或增稠劑，可能凝不起來。石膏粉在烘焙材料行或網路上買得到，要選食用級的。'}
+    {id:'douhua', name:'手作豆花', cat:'dessert', base:'vegan', allium:false, time:60,
+     desc:'只要豆漿和鹽滷，電鍋蒸一蒸、冷藏一夜，淋上黑糖薑水就是一碗豆花。',
+     ing:['無糖濃豆漿 1000 毫升（蛋白質 5% 以上）','食用鹽滷 5 到 6 毫升（約 1 小匙）','黑糖 4 大匙','水 150 毫升','老薑 3 片（可省略）','花生或粉圓 適量（可省略）'],
+     steps:['第一次做，先用一小杯豆漿，照比例加鹽滷試做，確認凝得起來再做整份。','無糖濃豆漿倒進耐熱的大碗或容器，加入鹽滷，輕輕拌勻，撈掉表面的泡泡。','放進電鍋，外鍋加 1 杯水，鍋蓋留一道縫，蒸到開關跳起。','開關跳起後不要掀蓋，再燜約 25 分鐘。','用筷子輕輕插入，沒有液體沾黏就是熟了。還有液體的話，再蒸一下。','放涼後蓋上保鮮膜，冷藏半天以上，最好一晚，會凝固得更好。','黑糖、水和薑片小火煮到糖溶化，約 5 分鐘。','用湯匙把豆花薄薄刮起盛碗，淋上糖水，放上喜歡的配料。'],
+     tip:'豆漿要選不加糖、蛋白質 5% 以上的，太稀或太濃都可能凝不起來，所以第一次先小量試做。鹽滷含鈉，高血壓或心血管疾病的人請酌量。時間不含冷藏。',
+     buy:'全聯福利中心有販售台鹽的「塩の心鹽滷」，各店不一定有貨。也可以在網路商店找，要買標示「食用」、有成分和製造商的，不要買沒標用途或來路不明的。'}
   ];
 
   var diet = 'all', alliumOk = true, current = null;
@@ -440,6 +442,11 @@ footer .logo{display:inline;font-size:1.4rem;margin-right:.5rem}
     w.appendChild(a); w.appendChild(b);
     return w;
   }
+  function extras(r){
+    var a = [el('p', 'tip', '小提醒：' + r.tip)];
+    if (r.buy) a.push(el('p', 'tip', '哪裡買：' + r.buy));
+    return a;
+  }
   function chevron(){
     var ns = 'http://www.w3.org/2000/svg';
     var s = document.createElementNS(ns, 'svg');
@@ -489,7 +496,7 @@ footer .logo{display:inline;font-size:1.4rem;margin-right:.5rem}
     var hb = el('div');
     hb.appendChild(meta(r)); hb.appendChild(title);
     head.appendChild(emojiBox(r, false)); head.appendChild(hb);
-    resultEl.replaceChildren(head, el('p', 'desc', r.desc), body(r, false), el('p', 'tip', '小提醒：' + r.tip));
+    resultEl.replaceChildren.apply(resultEl, [head, el('p', 'desc', r.desc), body(r, false)].concat(extras(r)));
     void resultEl.offsetWidth;
     resultEl.classList.add('dealt');
     current = r;
@@ -518,7 +525,7 @@ footer .logo{display:inline;font-size:1.4rem;margin-right:.5rem}
       var panel = el('div', 'panel');
       panel.appendChild(el('p', 'desc', r.desc));
       panel.appendChild(body(r, true));
-      panel.appendChild(el('p', 'tip', '小提醒：' + r.tip));
+      extras(r).forEach(function(n){ panel.appendChild(n); });
       d.appendChild(s); d.appendChild(panel);
       li.appendChild(d);
       menuEl.appendChild(li);
