@@ -5,21 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>素素看｜今天吃什麼素</title>
 <meta name="description" content="選好你吃的素，按一下，今天的菜就決定了。">
-<meta name="theme-color" content="#FFF4E2">
+<meta name="theme-color" content="#F6F9F3">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%A5%AC%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ground:#FFF4E2; --surface:#FFFFFF; --ink:#2B3A2C; --muted:#4A5B4D; --line:#EBD9B8; --tint:#FBE9CC;
-  --leaf:#24412B; --on-leaf:#FFFFFF; --pumpkin:#E8902F; --on-pumpkin:#1D2A1F; --press:#9C5A17;
+  --ground:#F6F9F3; --surface:#FFFFFF; --ink:#1D2A1F; --muted:#4F6052; --line:#D9E3D3; --tint:#EAF1E4;
+  --leaf:#2C6A3C; --on-leaf:#FFFFFF; --pumpkin:#E8902F; --on-pumpkin:#1D2A1F; --press:#9C5A17;
   --b-vegan:#CFE5C8; --b-egg:#F5DE84; --b-milk:#D7E6F4; --b-ovolacto:#F1DFC2; --b-allium:#E6D6EE; --b-ink:#1D2A1F;
   --display:"LXGW WenKai TC","Kaiti TC","BiauKai","DFKai-SB","Noto Serif TC",serif;
   --body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
   --shadow:0 1px 2px rgba(29,42,31,.06),0 8px 22px rgba(29,42,31,.08);
-  --hero-a:#E3EDD9; --hero-b:#F6F0DC; --glow:#FFE3B0; --mark:#F6C97F; --glass:rgba(255,255,255,.6); --card-warm:#FBE0B4;
-  --bar-bg:rgba(255,244,226,.9); --hdr-h:4.5rem;
+  --hero-a:#E3EDD9; --hero-b:#F6F0DC; --glow:#F8E9C8; --mark:#F6C97F; --glass:rgba(255,255,255,.6); --card-warm:#FBE0B4;
+  --bar-bg:rgba(246,249,243,.9); --hdr-h:4.5rem;
   color-scheme:light;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -84,6 +84,7 @@ img{max-width:100%}
 .hero-filters{grid-area:filters}
 @media (min-width:860px){.hero{grid-template-columns:1fr 1.1fr;grid-template-areas:"title result" "filters result" "actions result";grid-template-rows:auto auto 1fr;column-gap:3rem;row-gap:1.25rem;align-items:start;padding:1rem 0 .5rem}}
 .hero h1{font-family:var(--display);font-weight:700;font-size:clamp(1.9rem,6vw,4rem);line-height:1.2;margin:0 0 .5rem;letter-spacing:.02em}
+.eyebrow{margin:0 0 .25rem;font-size:.8125rem;letter-spacing:.14em;color:var(--leaf);font-weight:500}
 .lede{margin:0;color:var(--muted);font-size:1.125rem;max-width:26em}
 @media (max-width:640px){.lede{display:none}}
 .legend{font-weight:700;margin:0 0 .5rem}
@@ -98,9 +99,9 @@ img{max-width:100%}
 .chip[aria-pressed="true"]{background:var(--leaf);border-color:var(--leaf);color:var(--on-leaf);font-weight:500}
 .check{display:flex;align-items:center;gap:.6rem;min-height:44px;margin:.25rem 0 0;cursor:pointer}
 .check input{width:1.25rem;height:1.25rem;margin:0;accent-color:var(--leaf)}
-.pick{font-family:var(--display);font-size:1.3rem;font-weight:700;min-height:58px;padding:.5rem 2rem;width:100%;border:0;border-radius:20px;background:var(--pumpkin);color:var(--on-pumpkin);cursor:pointer;box-shadow:0 4px 0 var(--press);transition:transform .08s,box-shadow .08s}
+.pick{font-family:var(--display);font-size:1.3rem;font-weight:700;min-height:58px;padding:.5rem 2rem;width:100%;border:0;border-radius:28px;background:var(--leaf);color:var(--on-leaf);cursor:pointer;box-shadow:none;transition:transform .08s,box-shadow .08s}
 @media (min-width:860px){.pick{width:auto}}
-.pick:active{transform:translateY(3px);box-shadow:0 1px 0 var(--press)}
+.pick:active{transform:scale(.98)}
 
 .result{background:var(--card-warm);border:0;border-radius:32px;padding:1rem 1rem 0;overflow:hidden;min-height:15rem;transform-origin:top center;box-shadow:var(--shadow)}
 .result.empty{display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);border:2px dashed var(--line);background:var(--glass);box-shadow:none;padding:1rem}
@@ -221,7 +222,7 @@ footer .logo{display:inline;font-size:1.4rem;margin-right:.5rem}
 <body>
 <header class="site" id="siteHeader">
   <div class="wrap bar">
-    <a class="logo" href="#top"><span class="logo-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19C5 10 11 4 20 4c0 9-6 15-15 15z" fill="#FFF4E2"/><path d="M5 19L14 10" fill="none" stroke-width="1.8" stroke-linecap="round" style="stroke:var(--pumpkin)"/></svg></span>素素看</a>
+    <a class="logo" href="#top"><span class="logo-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19C5 10 11 4 20 4c0 9-6 15-15 15z" fill="#FFFFFF"/><path d="M5 19L14 10" fill="none" stroke-width="1.8" stroke-linecap="round" style="stroke:var(--pumpkin)"/></svg></span>素素看</a>
     <nav aria-label="主選單">
       <ul>
         <li><a href="#pick">今天吃什麼</a></li>
@@ -240,6 +241,7 @@ footer .logo{display:inline;font-size:1.4rem;margin-right:.5rem}
   <main>
     <div class="hero" id="pick">
       <div class="hero-title">
+        <p class="eyebrow">家常素食小幫手</p>
         <h1>今天吃什麼？</h1>
         <p class="lede">選好你吃的素，按一下，今天的菜就決定了。</p>
       </div>
